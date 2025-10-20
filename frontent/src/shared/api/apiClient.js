@@ -80,19 +80,19 @@ export const apiClient = new ApiClient();
 
 export class EgenkontrollService {
   static async submitForm(formData) {
-    return apiClient.post('/egenskontroll.php', formData)
+    return apiClient.post('/api/egenskontroll.php', formData)
   }
 
   static async getForms() {
-    return apiClient.get('/egenskontroll.php')
+    return apiClient.get('/api/egenskontroll.php')
   }
 
   static async getFormById(id) {
-    return apiClient.get(`/egenskontroll.php?id=${id}`)
+    return apiClient.get(`/api/egenskontroll.php?id=${id}`)
   }
 
   static async getPhoto(photoId) {
-    const response = await fetch(`${apiClient.baseURL}/egenskontroll.php?photoId=${photoId}`, {
+    const response = await fetch(`${apiClient.baseURL}/api/egenskontroll.php?photoId=${photoId}`, {
       headers: apiClient.getAuthHeaders()
     })
     
@@ -104,11 +104,47 @@ export class EgenkontrollService {
   }
 
   static async updateForm(id, formData) {
-    return apiClient.put(`/egenskontroll.php?id=${id}`, formData)
+    return apiClient.put(`/api/egenskontroll.php?id=${id}`, formData)
   }
 
   static async deleteForm(id) {
-    return apiClient.delete(`/egenskontroll.php?id=${id}`)
+    return apiClient.delete(`/api/egenskontroll.php?id=${id}`)
+  }
+}
+
+
+
+export class InstallationService {
+  static async submitForm(formData) {
+    return apiClient.post('/api/installation.php', formData)
+  }
+
+  static async getForms() {
+    return apiClient.get('/api/installation.php')
+  }
+
+  static async getFormById(id) {
+    return apiClient.get(`/api/installation.php?id=${id}`)
+  }
+
+  static async getPhoto(photoId) {
+    const response = await fetch(`${apiClient.baseURL}/api/installation.php?photoId=${photoId}`, {
+      headers: apiClient.getAuthHeaders()
+    })
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+    
+    return await response.blob()
+  }
+
+  static async updateForm(id, formData) {
+    return apiClient.put(`/api/installation.php?id=${id}`, formData)
+  }
+
+  static async deleteForm(id) {
+    return apiClient.delete(`/api/installation.php?id=${id}`)
   }
 }
 

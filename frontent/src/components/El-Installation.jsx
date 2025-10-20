@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Camera, Check, Globe, ChevronDown, ChevronUp } from 'lucide-react'
+import { InstallationService } from '@/shared/api/apiClient' // Add this import
 
 const Installation = () => {
   const [language, setLanguage] = useState('sv')
@@ -80,6 +81,8 @@ const Installation = () => {
     supervisorSignature: ''
   })
 
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
   const translations = {
     sv: {
       title: 'Egenkontroll - Solpanelsinstallation',
@@ -141,7 +144,9 @@ const Installation = () => {
       installerSignature: 'Installatörens signatur',
       supervisorSignature: 'Arbetsledarens signatur',
       submit: 'Skicka in formulär',
-      confirmationMessage: 'Tack! Din egenkontroll har sparats.'
+      submitting: 'Skickar...',
+      confirmationMessage: 'Tack! Din egenkontroll har sparats.',
+      errorMessage: 'Ett fel uppstod. Försök igen.'
     },
     en: {
       title: 'Quality Control - Solar Panel Installation',
@@ -203,7 +208,9 @@ const Installation = () => {
       installerSignature: 'Installer Signature',
       supervisorSignature: 'Supervisor Signature',
       submit: 'Submit Form',
-      confirmationMessage: 'Thank you! Your quality control has been saved.'
+      submitting: 'Submitting...',
+      confirmationMessage: 'Thank you! Your quality control has been saved.',
+      errorMessage: 'An error occurred. Please try again.'
     }
   }
 
@@ -248,21 +255,115 @@ const Installation = () => {
     }))
   }
 
-  const handlePhotoUpload = (section, event) => {
+  const handlePhotoUpload = async (section, event) => {
     const files = Array.from(event.target.files)
+    const processedPhotos = []
+    
+    for (const file of files) {
+      const base64 = await convertFileToBase64(file)
+      processedPhotos.push({
+        name: file.name,
+        type: file.type,
+        data: base64
+      })
+    }
+    
     setFormData(prev => ({
       ...prev,
       [section]: {
         ...prev[section],
-        photos: [...prev[section].photos, ...files]
+        photos: [...prev[section].photos, ...processedPhotos]
       }
     }))
   }
 
-  const handleSubmit = (e) => {
+  const convertFileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = () => resolve(reader.result)
+      reader.onerror = error => reject(error)
+    })
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log('Form submitted:', formData)
-    alert(t.confirmationMessage)
+    setIsSubmitting(true)
+    
+    try {
+      await InstallationService.submitForm(formData)
+      alert(t.confirmationMessage)
+      // Optional: Reset form after successful submission
+      // resetForm()
+    } catch (error) {
+      console.error('Error submitting form:', error)
+      alert(t.errorMessage)
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  // Optional: Reset form function
+  const resetForm = () => {
+    setFormData({
+      customerName: '',
+      address: '',
+      projectNumber: '',
+      date: new Date().toISOString().split('T')[0],
+      installerName: '',
+      supervisor: '',
+      section1: {
+        roofInspected: false,
+        fixingsChecked: false,
+        weatherChecked: false,
+        toolsInspected: false,
+        safetyUsed: false,
+        notes: '',
+        photos: []
+      },
+      section2: {
+        railsAligned: false,
+        fixingsLoadBearing: false,
+        sealingsInstalled: false,
+        boltsTightened: false,
+        notes: '',
+        photos: []
+      },
+      section3: {
+        panelsFixed: false,
+        evenAlignment: false,
+        noDamagedCables: false,
+        serialNumbersDocumented: false,
+        notes: '',
+        photos: []
+      },
+      section4: {
+        cablesSized: false,
+        mc4Crimped: false,
+        dcIsolatorInstalled: false,
+        cablePathsProtected: false,
+        notes: '',
+        photos: []
+      },
+      section5: {
+        weatherChecked: false,
+        workPausedWind: false,
+        ppeUsed: false,
+        notes: '',
+        photos: []
+      },
+      section6: {
+        allPanelsFixed: false,
+        allCablesMarked: false,
+        roofSealed: false,
+        areaCleaned: false,
+        documentationHandedOver: false,
+        notes: '',
+        photos: []
+      },
+      installerSignature: '',
+      supervisorSignature: ''
+    })
   }
 
   // Hjälpfunktion för att rendera en sektion
@@ -505,10 +606,11 @@ const Installation = () => {
             <Button
               type="submit"
               size="lg"
-              className="bg-gradient-to-r from-[#C9A44A] to-[#B8934A] hover:from-[#B8934A] hover:to-[#A8834A] text-white font-bold px-12 py-6 text-lg shadow-xl"
+              disabled={isSubmitting}
+              className="bg-gradient-to-r from-[#C9A44A] to-[#B8934A] hover:from-[#B8934A] hover:to-[#A8834A] text-white font-bold px-12 py-6 text-lg shadow-xl disabled:opacity-50"
             >
               <Check className="w-5 h-5 mr-2" />
-              {t.submit}
+              {isSubmitting ? t.submitting : t.submit}
             </Button>
           </div>
         </form>
