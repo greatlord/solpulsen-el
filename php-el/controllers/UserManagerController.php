@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../models/usersManger.php';
-require_once __DIR__ . '/../helpers/ResponseHelper.php';
+require_once '../helpers/ResponseHelper.php';
 
 class UserManagerController {
     public static function getAll() {
