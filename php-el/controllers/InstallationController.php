@@ -45,7 +45,6 @@ class InstallationController {
             ], 201);
             
         } catch (Exception $e) {
-            error_log("Error creating installation form: " . $e->getMessage());
             ResponseHelper::error('Failed to create form: ' . $e->getMessage(), 500);
         }
     }
@@ -86,8 +85,7 @@ class InstallationController {
         $photo = $model->getPhoto($photoId);
         
         if (!$photo) {
-            http_response_code(404);
-            echo json_encode(['message' => 'Photo not found']);
+            ResponseHelper::error('Photo not found', 404);
             return;
         }
         

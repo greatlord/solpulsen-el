@@ -53,6 +53,13 @@ try {
             break;
 
         case 'PUT':
+
+            if ($user['role'] !== 'admin') { 
+                http_response_code(403);
+                echo json_encode(['message' => 'Forbidden']);
+                exit;
+            }
+
             if (!isset($queryParams['id'])) {
                 ResponseHelper::error('ID parameter required for update', 400);
                 break;
@@ -65,6 +72,13 @@ try {
             break;
 
         case 'DELETE':
+
+            if ($user['role'] !== 'admin') { 
+                http_response_code(403);
+                echo json_encode(['message' => 'Forbidden']);
+                exit;
+            }
+            
             if (!isset($queryParams['id'])) {
                 ResponseHelper::error('ID parameter required for deletion', 400);
                 break;

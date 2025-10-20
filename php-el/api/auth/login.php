@@ -1,5 +1,5 @@
 <?php
-ini_set('display_errors', 1); ini_set('display_startup_errors', 1); error_reporting(E_ALL);
+//ini_set('display_errors', 1); ini_set('display_startup_errors', 1); error_reporting(E_ALL);
 require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . '/../../models/user.php';
 
@@ -7,7 +7,7 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
 header('Content-Type: application/json');
-header("Access-Control-Allow-Origin: http://localhost:5173");
+header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Authorization, Content-Type");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 

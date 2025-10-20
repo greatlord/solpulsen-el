@@ -86,8 +86,7 @@ class EgenkontrollController {
         $photo = $model->getPhoto($photoId);
         
         if (!$photo) {
-            http_response_code(404);
-            echo json_encode(['message' => 'Photo not found']);
+            ResponseHelper::error('Photo not found', 404);
             return;
         }
         
