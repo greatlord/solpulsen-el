@@ -504,3 +504,9 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+
+-- password test123
+
+INSERT INTO `users` (`id`, `email`, `password_hash`, `role`, `first_name`, `last_name`, `phone`, `is_active`, `created_at`, `last_login`) VALUES
+(1, 'admin@solpulsen.com', '$2y$12$/V1YSjXhGitEX0ayBu91ze/.enilsjM/lYRTmWAQIwe.by7gmflJG', 'admin', 'Admin', 'Admin', NULL, 1, '2025-10-20 09:12:47', '2025-10-20 14:00:22');
