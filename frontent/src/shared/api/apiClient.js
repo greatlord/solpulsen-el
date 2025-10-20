@@ -6,7 +6,8 @@ const getApiBaseUrl = () => {
   }
   
   // In development, use your local PHP app
-  return import.meta.env.VITE_API_URL + '/api' || 'http://my-php-app.local/php/api';
+  
+  return process.env.NODE_ENV === 'production' ? 'https://crm.solpulsen.se/php' : import.meta.env.VITE_API_URL;
 };
 
 class ApiClient {
@@ -76,77 +77,42 @@ class ApiClient {
 
 export const apiClient = new ApiClient();
 
-// Example service classes for your SolPulsen CRM
-export class LeadsService {
-  static async getLeads() {
-    return apiClient.get('/leads.php');
+
+export class EgenkontrollService {
+  static async submitForm(formData) {
+    return apiClient.post('/egenskontroll.php', formData)
   }
 
-  static async getLeadById(id) {
-    return apiClient.get(`/leads.php?id=${id}`);
+  static async getForms() {
+    return apiClient.get('/egenskontroll.php')
   }
 
-  static async createLead(leadData) {
-    return apiClient.post('/leads.php', leadData);
+  static async getFormById(id) {
+    return apiClient.get(`/egenskontroll.php?id=${id}`)
   }
 
-  static async updateLead(id, leadData) {
-    return apiClient.put(`/leads.php?id=${id}`, leadData);
+  static async getPhoto(photoId) {
+    const response = await fetch(`${apiClient.baseURL}/egenskontroll.php?photoId=${photoId}`, {
+      headers: apiClient.getAuthHeaders()
+    })
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+    
+    return await response.blob()
   }
 
-  static async deleteLead(id) {
-    return apiClient.delete(`/leads.php?id=${id}`);
+  static async updateForm(id, formData) {
+    return apiClient.put(`/egenskontroll.php?id=${id}`, formData)
+  }
+
+  static async deleteForm(id) {
+    return apiClient.delete(`/egenskontroll.php?id=${id}`)
   }
 }
 
-export class CustomersService {
-  static async getCustomers() {
-    return apiClient.get('/customers.php');
-  }
 
-  static async getCustomerById(id) {
-    return apiClient.get(`/customers.php?id=${id}`);
-  }
-
-  static async createCustomer(customerData) {
-    return apiClient.post('/customers.php', customerData);
-  }
-
-  static async updateCustomer(id, customerData) {
-    return apiClient.put(`/customers.php?id=${id}`, customerData);
-  }
-}
-
-export class ActivitiesService {
-  static async getActivities() {
-    return apiClient.get('/activities.php');
-  }
-
-  static async createActivity(activityData) {
-    return apiClient.post('/activities.php', activityData);
-  }
-
-  static async updateActivity(id, activityData) {
-    return apiClient.put(`/activities.php?id=${id}`, activityData);
-  }
-
-  static async deleteActivity(id) {
-    return apiClient.delete(`/activities.php?id=${id}`);
-  }
-}
-
-export class SellerService {
-  static async submitSellerForm(formData) {
-    return apiClient.post('/seller-form.php', formData);
-  }
-}
-
-// Add the new StromService
-export class StromService {
-  static async submitStromForm(formData) {
-    return apiClient.post('/incoming/submit-strom-form.php', formData);
-  }
-}
 
 export class AuthService {
   static async login(credentials) {

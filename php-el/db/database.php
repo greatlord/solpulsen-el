@@ -4,10 +4,10 @@ class Database {
     private $pdo;
 
     public function __construct() {
-        $host = 'localhost';
-        $db   = 'pulsen_suitecrm';
-        $user = 'pulsen_suitecrm';
-        $pass = 'I%XShyxikg7n3$q0';
+        $host = '188.66.60.173';
+        $db   = 'pulsen_el';
+        $user = 'pulsen_el';
+        $pass = '8twa838F$';
         $charset = 'utf8mb4';
 
         $dsn = "mysql:host=$host;dbname=$db;charset=$charset";

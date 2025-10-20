@@ -6,13 +6,14 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Badge } from '@/components/ui/badge'
-import { ChevronDown, ChevronUp, Check, Globe } from 'lucide-react'
+import { ChevronDown, ChevronUp, Check, Globe, Loader2 } from 'lucide-react'
 import logo from '../assets/logagold.png'
-
+import { EgenkontrollService } from '@/shared/api/apiClient'
 
 const EgenkontrollForm = () => {
   const [language, setLanguage] = useState('sv')
   const [expandedSections, setExpandedSections] = useState({})
+  const [isSubmitting, setIsSubmitting] = useState(false)
   
   const [formData, setFormData] = useState({
     // Projektinformation
@@ -210,7 +211,9 @@ const EgenkontrollForm = () => {
       electricianSignature: 'Elektrikerens signatur',
       customerSignature: 'Kundens signatur',
       submitForm: 'Skicka formulär',
-      confirmationMessage: 'Formulär skickat! Tack för din egenkontroll.'
+      submitting: 'Skickar...',
+      confirmationMessage: 'Formulär skickat! Tack för din egenkontroll.',
+      errorMessage: 'Ett fel uppstod vid insändning. Försök igen.'
     },
     en: {
       title: 'Quality Control - Electrical Installation Solar Panels',
@@ -303,7 +306,9 @@ const EgenkontrollForm = () => {
       electricianSignature: 'Electrician Signature',
       customerSignature: 'Customer Signature',
       submitForm: 'Submit Form',
-      confirmationMessage: 'Form submitted! Thank you for your quality control.'
+      submitting: 'Submitting...',
+      confirmationMessage: 'Form submitted! Thank you for your quality control.',
+      errorMessage: 'An error occurred during submission. Please try again.'
     }
   }
 
@@ -353,19 +358,190 @@ const EgenkontrollForm = () => {
     }))
   }
 
-  const handlePhotoUpload = (section, files) => {
-    // Handle photo upload logic here
-    console.log('Photos uploaded for', section, files)
+  // File to base64 conversion function
+  const convertFileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        resolve({
+          name: file.name,
+          data: e.target.result, // Full data URL
+          type: file.type,
+          size: file.size
+        })
+      }
+      reader.onerror = reject
+      reader.readAsDataURL(file)
+    })
   }
 
-  const handleSubmit = (e) => {
+  const handlePhotoUpload = async (section, files) => {
+    try {
+      const base64Images = await Promise.all(
+        Array.from(files).map(convertFileToBase64)
+      )
+      
+      setFormData(prev => ({
+        ...prev,
+        [section]: {
+          ...prev[section],
+          photos: [...(prev[section].photos || []), ...base64Images]
+        }
+      }))
+    } catch (error) {
+      console.error('Error converting images:', error)
+      alert('Error uploading photos. Please try again.')
+    }
+  }
+
+  // Function to reset form after successful submission
+  const resetForm = () => {
+    setFormData({
+      customerName: '',
+      address: '',
+      projectNumber: '',
+      date: new Date().toISOString().split('T')[0],
+      electricianName: '',
+      certificationNumber: '',
+      section1: {
+        workPermitObtained: false,
+        safetyEquipmentChecked: false,
+        voltageTestersCalibrated: false,
+        isolationTestersAvailable: false,
+        personalProtectiveEquipment: false,
+        notes: '',
+        photos: []
+      },
+      section2: {
+        cableSizeCorrect: false,
+        cableRoutingSafe: false,
+        cableProtectionInstalled: false,
+        cableMarkingComplete: false,
+        fireSealsInstalled: false,
+        notes: '',
+        photos: []
+      },
+      section3: {
+        inverterMountingSecure: false,
+        inverterVentilationAdequate: false,
+        dcConnectionsCorrect: false,
+        acConnectionsCorrect: false,
+        groundingVerified: false,
+        inverterConfigured: false,
+        notes: '',
+        photos: []
+      },
+      section4: {
+        circuitBreakerSizeCorrect: false,
+        rcboInstalled: false,
+        labelingComplete: false,
+        connectionsTightened: false,
+        phasesBalanced: false,
+        notes: '',
+        photos: []
+      },
+      section5: {
+        earthingResistanceMeasured: false,
+        earthingResistanceAcceptable: false,
+        surgeProtectionInstalled: false,
+        bondingConductorsInstalled: false,
+        lightningProtectionConnected: false,
+        notes: '',
+        photos: []
+      },
+      section6: {
+        insulationResistanceTest: false,
+        continuityTest: false,
+        polarityTest: false,
+        rcdTest: false,
+        voltageTest: false,
+        functionalTest: false,
+        notes: '',
+        photos: []
+      },
+      section7: {
+        schematicDiagramsComplete: false,
+        installationCertificateIssued: false,
+        testResultsDocumented: false,
+        userManualProvided: false,
+        warrantyDocumentsProvided: false,
+        notes: '',
+        photos: []
+      },
+      section8: {
+        systemStartedSuccessfully: false,
+        monitoringSystemConnected: false,
+        customerInstructed: false,
+        siteCleanedUp: false,
+        finalInspectionComplete: false,
+        notes: '',
+        photos: []
+      },
+      electricianSignature: '',
+      customerSignature: ''
+    })
+    setExpandedSections({})
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
+    setIsSubmitting(true)
     
-    // Here you would send the data to your backend
-    console.log('Form data:', formData)
-    
-    // Show confirmation
-    alert(t.confirmationMessage)
+    try {
+      // Prepare the form data for submission
+      const submissionData = {
+        ...formData,
+        // Ensure all sections have photos array
+        section1: {
+          ...formData.section1,
+          photos: formData.section1.photos || []
+        },
+        section2: {
+          ...formData.section2,
+          photos: formData.section2.photos || []
+        },
+        section3: {
+          ...formData.section3,
+          photos: formData.section3.photos || []
+        },
+        section4: {
+          ...formData.section4,
+          photos: formData.section4.photos || []
+        },
+        section5: {
+          ...formData.section5,
+          photos: formData.section5.photos || []
+        },
+        section6: {
+          ...formData.section6,
+          photos: formData.section6.photos || []
+        },
+        section7: {
+          ...formData.section7,
+          photos: formData.section7.photos || []
+        },
+        section8: {
+          ...formData.section8,
+          photos: formData.section8.photos || []
+        }
+      }
+
+      // Submit to backend
+      const result = await EgenkontrollService.submitForm(submissionData)
+      
+      // Show success message
+      alert(t.confirmationMessage)
+      console.log('Form submitted successfully:', result)
+      
+      // Reset form after successful submission
+      resetForm()
+      
+    } catch (error) {
+      console.error('Error submitting form:', error)
+      alert(t.errorMessage || 'Error submitting form. Please try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const renderSection = (sectionNumber, sectionKey, title, items) => {
@@ -433,6 +609,11 @@ const EgenkontrollForm = () => {
                   onChange={(e) => handlePhotoUpload(sectionKey, e.target.files)}
                   className="border-2 focus:border-[#C9A44A]"
                 />
+                {formData[sectionKey].photos && formData[sectionKey].photos.length > 0 && (
+                  <div className="mt-2 text-sm text-gray-600">
+                    {formData[sectionKey].photos.length} photo(s) uploaded
+                  </div>
+                )}
               </div>
             </div>
           </CardContent>
@@ -616,10 +797,20 @@ const EgenkontrollForm = () => {
           <div className="flex justify-center">
             <Button 
               type="submit"
-              className="bg-[#C9A44A] hover:bg-[#B8934A] text-white text-lg px-8 py-6 shadow-lg hover:shadow-xl transition-all"
+              disabled={isSubmitting}
+              className="bg-[#C9A44A] hover:bg-[#B8934A] text-white text-lg px-8 py-6 shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <Check className="mr-2 h-5 w-5" />
-              {t?.submitForm || 'Skicka formulär'}
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  {t?.submitting || 'Skickar...'}
+                </>
+              ) : (
+                <>
+                  <Check className="mr-2 h-5 w-5" />
+                  {t?.submitForm || 'Skicka formulär'}
+                </>
+              )}
             </Button>
           </div>
         </form>
