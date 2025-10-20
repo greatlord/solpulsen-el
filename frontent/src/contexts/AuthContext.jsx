@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }) => {
     if (!token) return false;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/auth/renewtoken.php`, {
+      const response = await fetch(`${API_BASE_URL}/auth/renewtoken.php`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -136,7 +136,7 @@ export const AuthProvider = ({ children }) => {
         ...options.headers,
       };
       
-      const response = await fetch(`${API_BASE_URL}/api${endpoint}`, {
+      const response = await fetch(`${API_BASE_URL}/${endpoint}`, {
         headers,
         ...options,
       });
@@ -147,7 +147,7 @@ export const AuthProvider = ({ children }) => {
         if (renewed) {
           // Retry the request with new token
           const newToken = localStorage.getItem('jwt');
-          const retryResponse = await fetch(`${API_BASE_URL}/api${endpoint}`, {
+          const retryResponse = await fetch(`${API_BASE_URL}/${endpoint}`, {
             ...options,
             headers: {
               ...headers,
@@ -233,7 +233,7 @@ export const AuthProvider = ({ children }) => {
     setError('');
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/auth/login.php`, {
+      const response = await fetch(`${API_BASE_URL}/auth/login.php`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
