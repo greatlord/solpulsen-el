@@ -12,7 +12,7 @@ export const useAuth = () => {
 };
 
 // API Base URL - adjust based on environment
-const API_BASE_URL = process.env.NODE_ENV === 'production' ? 'https://crm.solpulsen.se/php' : import.meta.env.VITE_API_URL;
+const API_BASE_URL = process.env.NODE_ENV === 'production' ? 'https://el.solpulsen.se/php/api' : import.meta.env.VITE_API_URL;
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);

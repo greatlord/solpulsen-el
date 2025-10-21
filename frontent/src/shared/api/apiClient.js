@@ -1,13 +1,6 @@
 // shared/api/apiClient.js
-const getApiBaseUrl = () => {
-  // In production, use the same domain with php/api path
-  if (import.meta.env.PROD) {
-    return '/php/api';
-  }
-  
-  // In development, use your local PHP app
-  
-  return process.env.NODE_ENV === 'production' ? 'https://crm.solpulsen.se/php' : import.meta.env.VITE_API_URL;
+const getApiBaseUrl = () => { 
+  return process.env.NODE_ENV === 'production' ? 'https://el.solpulsen.se/php/api' : import.meta.env.VITE_API_URL;
 };
 
 class ApiClient {

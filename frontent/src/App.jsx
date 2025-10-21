@@ -46,8 +46,8 @@ const Navigation = ({ isOpen, setIsOpen }) => {
     {
       title: 'Huvudmeny',
       items: [
-        { path: '/', label: 'EgenkontrollForm', icon: BarChart3 },
-        { path: '/installform', label: 'InstallForm', icon: CalendarIcon }
+        { path: '/', label: 'Egenkontroll - Elektriker EL-Installation', icon: BarChart3 },
+        { path: '/installform', label: 'Egenkontroll - Elektriker montör', icon: CalendarIcon }
         
       ]
     },       
