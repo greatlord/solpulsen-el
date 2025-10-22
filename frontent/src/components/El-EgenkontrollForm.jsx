@@ -624,8 +624,8 @@ const EgenkontrollForm = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      {/* Header */}
-      <header className="bg-gradient-to-r from-[#2C3E50] to-[#34495E] text-white py-6 shadow-lg sticky top-0 z-50">
+      {/* Page Header */}
+      <div className="bg-gradient-to-r from-[#2C3E50] to-[#34495E] text-white py-6 shadow-lg">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -638,14 +638,14 @@ const EgenkontrollForm = () => {
             <Button
               onClick={() => setLanguage(language === 'sv' ? 'en' : 'sv')}
               variant="outline"
-              className="bg-white/10 hover:bg-white/20 border-white/30 text-white"
+              className="bg-white/10 hover:bg-white/20 border-white/30 text-white mt-2"
             >
               <Globe className="mr-2 h-4 w-4" />
               {language === 'sv' ? 'English' : 'Svenska'}
             </Button>
           </div>
         </div>
-      </header>
+      </div>
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8 max-w-4xl">
@@ -815,8 +815,7 @@ const EgenkontrollForm = () => {
           </div>
         </form>
       </main>
-
-      {/* Footer */}
+       {/* Footer */}
       <footer className="bg-gradient-to-r from-[#2C3E50] to-[#34495E] text-white py-6 mt-12">
         <div className="container mx-auto px-4 text-center">
           <p className="text-sm">© 2025 Solpulsen Energy Norden AB</p>

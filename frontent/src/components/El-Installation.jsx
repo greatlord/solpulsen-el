@@ -440,9 +440,9 @@ const Installation = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      {/* Header */}
-      <header className="bg-gradient-to-r from-gray-800 to-gray-900 text-white shadow-lg sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+      {/* Page Header */}
+      <div className="bg-gradient-to-r from-gray-800 to-gray-900 text-white shadow-lg py-6">
+        <div className="container mx-auto px-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-[#C9A44A] rounded-full flex items-center justify-center text-white font-bold">
               SP
@@ -455,13 +455,13 @@ const Installation = () => {
           <Button
             onClick={() => setLanguage(language === 'sv' ? 'en' : 'sv')}
             variant="outline"
-            className="flex items-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20"
+            className="flex items-center mt-2 gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20"
           >
             <Globe className="w-4 h-4" />
             {t.languageToggle}
           </Button>
         </div>
-      </header>
+      </div>
 
       {/* Main Form */}
       <main className="container mx-auto px-4 py-8 max-w-4xl">
