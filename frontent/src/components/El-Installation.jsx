@@ -442,24 +442,28 @@ const Installation = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Page Header */}
       <div className="bg-gradient-to-r from-gray-800 to-gray-900 text-white shadow-lg py-6">
-        <div className="container mx-auto px-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-[#C9A44A] rounded-full flex items-center justify-center text-white font-bold">
-              SP
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-[#C9A44A] rounded-full flex items-center justify-center text-white font-bold">
+                SP
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold">{t.title}</h1>
+                <p className="text-sm text-gray-300">{t.subtitle}</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-2xl font-bold">{t.title}</h1>
-              <p className="text-sm text-gray-300">{t.subtitle}</p>
+            <div className="flex justify-end sm:justify-start">
+              <Button
+                onClick={() => setLanguage(language === 'sv' ? 'en' : 'sv')}
+                variant="outline"
+                className="flex items-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20"
+              >
+                <Globe className="w-4 h-4" />
+                {t.languageToggle}
+              </Button>
             </div>
           </div>
-          <Button
-            onClick={() => setLanguage(language === 'sv' ? 'en' : 'sv')}
-            variant="outline"
-            className="flex items-center mt-2 gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20"
-          >
-            <Globe className="w-4 h-4" />
-            {t.languageToggle}
-          </Button>
         </div>
       </div>
 

@@ -627,7 +627,7 @@ const EgenkontrollForm = () => {
       {/* Page Header */}
       <div className="bg-gradient-to-r from-[#2C3E50] to-[#34495E] text-white py-6 shadow-lg">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex items-center gap-4">
               <img src={logo} alt="Solpulsen Logo" className="h-12 w-12 object-contain" />
               <div>
@@ -635,14 +635,16 @@ const EgenkontrollForm = () => {
                 <p className="text-sm text-gray-300">{t?.subtitle || 'Solpulsen Energy Norden AB'}</p>
               </div>
             </div>
-            <Button
-              onClick={() => setLanguage(language === 'sv' ? 'en' : 'sv')}
-              variant="outline"
-              className="bg-white/10 hover:bg-white/20 border-white/30 text-white mt-2"
-            >
-              <Globe className="mr-2 h-4 w-4" />
-              {language === 'sv' ? 'English' : 'Svenska'}
-            </Button>
+            <div className="flex justify-end sm:justify-start">
+              <Button
+                onClick={() => setLanguage(language === 'sv' ? 'en' : 'sv')}
+                variant="outline"
+                className="bg-white/10 hover:bg-white/20 border-white/30 text-white"
+              >
+                <Globe className="mr-2 h-4 w-4" />
+                {language === 'sv' ? 'English' : 'Svenska'}
+              </Button>
+            </div>
           </div>
         </div>
       </div>
